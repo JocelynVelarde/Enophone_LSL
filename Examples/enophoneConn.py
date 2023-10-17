@@ -21,7 +21,7 @@ class Graph:
         self.plot_names = ['Quality A2', 'Quality A1', 'Quality C4', 'Quality C3']
         self.mains = None
         self.app = QtGui.QApplication([])
-        self.win = pg.GraphicsWindow(title='Enophone Live Streaming', size=(800, 600))
+        self.win = pg.GraphicsLayoutWidget(title='Enophone Live Streaming', size=(800, 600))
         self._init_timeseries()
 
         timer = QtCore.QTimer()

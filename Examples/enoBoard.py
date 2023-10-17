@@ -23,13 +23,14 @@ def main():
 
     # demo how to convert it to pandas DF and plot data
     eeg_channels = BoardShim.get_eeg_channels(BoardIds.ENOPHONE_BOARD.value)
+    print(eeg_channels)
     df = pd.DataFrame(np.transpose(data))
     print('Data From the Board')
     print(df.head(10))
 
     # demo for data serialization using brainflow API, we recommend to use it instead pandas.to_csv()
-    DataFilter.write_file(data, 'test.csv', 'w')  # use 'a' for append mode
-    restored_data = DataFilter.read_file('test.csv')
+    DataFilter.write_file(data, 'test2.csv', 'w')  # use 'a' for append mode
+    restored_data = DataFilter.read_file('test2.csv')
     restored_df = pd.DataFrame(np.transpose(restored_data))
     print('Data From the File')
     print(restored_df.head(10))

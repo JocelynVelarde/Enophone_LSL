@@ -1,44 +1,40 @@
 import time
 import brainflow
-from brainflow.board_shim import BrainFlowInputParams, BoardShim
+from brainflow.board_shim import BrainFlowInputParams, BoardShim, BoardIds
 
-# Initialize Enophone EEG board parameters
-enophone_params = BrainFlowInputParams()
-enophone_params.ip_port = 12345  # Replace with the correct IP and port
-enophone_params.ip_protocol = brainflow.ip_protocol_type_t.UDP
-
-# Initialize Enophone EEG board
-board = BoardShim(board_id=brainflow.board_id_t.ENOPHONE, input_params=enophone_params)
+BoardShim.enable_dev_board_logger()
+params = BrainFlowInputParams()
+board = BoardShim(BoardIds.ENOPHONE_BOARD.value, params)
 board.prepare_session()
 board.start_stream()
 
-# Create an LSL outlet to stream Enophone EEG data
+
 from pylsl import StreamInfo, StreamOutlet
 
-# Define stream information
+
 stream_name = "EnophoneEEGStream"
 stream_type = "EEG"
-num_channels = board.get_num_channels()
+eeg_channels = BoardShim.get_eeg_channels(BoardIds.ENOPHONE_BOARD.value)
+print(eeg_channels)
 
-# Create an LSL stream
-info = StreamInfo(stream_name, stream_type, num_channels, board.get_sampling_rate(), 'float32', 'myuidw43536')
 
-# Create an outlet
+info = StreamInfo(stream_name, stream_type, 4, 16000, "float32", "hi")
+
+
 outlet = StreamOutlet(info)
 
 print("LSL Stream has started...")
 
 try:
     while True:
-        # Read data from the Enophone EEG board
-        data = board.get_current_board_data(256)  # Adjust buffer size as needed
+        data = board.get_current_board_data(256)  
 
         # Send the data to the LSL stream
         outlet.push_chunk(data)
-        time.sleep(0.01)  # Adjust sleep time as needed
+        time.sleep(0.01) 
 except KeyboardInterrupt:
     pass
 
-# Stop and release resources
+
 board.stop_stream()
 board.release_session()
