@@ -15,10 +15,10 @@ from pylsl import StreamInfo, StreamOutlet
 stream_name = "EnophoneEEGStream"
 stream_type = "EEG"
 eeg_channels = BoardShim.get_eeg_channels(BoardIds.ENOPHONE_BOARD.value)
-print(eeg_channels)
+numChannels = len(eeg_channels)
 
 
-info = StreamInfo(stream_name, stream_type, 4, 16000, "float32", "hi")
+info = StreamInfo(stream_name, stream_type, numChannels, 250, "float32", "hi")
 
 
 outlet = StreamOutlet(info)
